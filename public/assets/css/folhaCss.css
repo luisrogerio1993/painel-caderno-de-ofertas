@@ -1,0 +1,180 @@
+/* 
+    Created on : 12/01/2018, 10:36:32
+    Author     : Luis Araujo
+*/
+:root {
+    --vermelhoPadrao: #dd4b39;
+    --vermelhoEscuroPadrao: #c42a31;
+    --brancoPadrao: #ffffff;
+    --pretoPadrao: #000000;
+    --cinzaPadrao: #717171;
+}
+
+.list-group-item{
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin: 0px;
+}
+
+.btn-acima-form{
+    margin-bottom: 15px;
+}
+
+table th{
+    color: var( --brancoPadrao );
+    background-color: var( --vermelhoPadrao );
+}
+
+.login-page,.register-page{
+    background: var( --brancoPadrao );
+}
+
+.login-logo a,.register-logo a{
+    color: var( --pretoPadrao );
+}
+.login-logo a:hover,
+.login-logo a:active,
+.login-logo a:focus,
+.register-logo a:hover,
+.register-logo a:active,
+.register-logo a:focus
+{
+    color: var( --cinzaPadrao );
+}
+
+.login-box-body,.register-box-body{
+    background:#fff;
+    padding:20px;
+    border-top:0;
+    color:#666;
+    border: 1px var( --vermelhoPadrao ) solid;
+    border-radius: 5px;
+}
+
+a{
+    color: var( --pretoPadrao );
+}
+
+a:hover,a:active,a:focus{
+    color: var( --cinzaPadrao );
+}
+
+input[type="file"]{
+    padding-top: 22px;
+    min-height: 80px;
+}
+
+input[type="radio"], input[type="checkbox"]{
+    height: 23px;
+    width: 23px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.input-group-addon{
+    padding: 5px;
+}
+
+.div-img{
+    width:16.66666667%;
+    position:relative;
+    min-height:1px;
+    float: left;
+    height: 80px;
+    text-align: center;
+}
+
+.label-form{
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: .2em .6em .3em;
+    background-color:#dd4b39 !important;
+    color: #fff;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    min-width: 210px;
+    max-width: 100%;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+    color: black;
+}
+
+.pagination > li > a:hover {
+    color: var( --vermelhoPadrao );
+}
+
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+    background-color: var( --vermelhoPadrao );
+    border-color: var( --vermelhoPadrao );
+}
+
+.menuPagamento > a > li {
+    font-size: 20px;
+}
+
+.div-card-fora
+{
+    padding: 15px;
+    border-radius: 14px;
+    background: linear-gradient(#ffeded, #b42c1b, #dd4b39);
+    border: 4px solid #dd4b39;
+}
+
+.form-cartao-brand
+{
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #000;
+}
+
+.info-box-icon-override{
+    text-align:center;
+    display:block;
+    height:90px;
+    width:90px;
+    font-size: 45px;
+    line-height: 90px;
+    background: rgb(221, 75, 57);
+    color: #ffffff;
+    border-radius: 100%;
+}
+
+.td-star-comments{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items:center;
+    align-items: center;
+}
+
+.form-search{
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+@media (min-width:620px)
+{
+    .mostrar-mensagem-tela-p
+    {
+        display: none;
+    }
+}
+
+.botaoRemoverImagem
+{
+    position: absolute;
+    z-index: 1;
+    left: 0%;
+}
