@@ -187,6 +187,9 @@ class EstabelecimentoController extends Controller
         //redirecionar se o item não existir
         if (!$estabelecimento) return redirect()->back();
         
+        //usuario logado tem autorização?
+        if(!$estabelecimento->userAuthorize()) return redirect()->back();
+        
         //Apagar imagem perfil antiga se houver (update only)
         if($estabelecimento->image != null){
             Vendor::apagarArquivo(config('constantes.DESTINO_IMAGE_ESTABELECIMENTO'), $estabelecimento->image);
@@ -216,5 +219,28 @@ class EstabelecimentoController extends Controller
             
             return view('admin.estabelecimentos.index', compact('title', 'estabelecimentos'));
         }
+    }
+    
+    public function destroyImage(Request $request) {
+        //recuperar dados do formulario
+        $data = $request->all();
+  
+        //Recuperar dados do estabelecimento
+        $estabelecimento = $this->estabelecimentos->find($data['id']);
+        
+        //redirecionar se o item não existir
+        if (!$estabelecimento) return redirect()->back();
+        
+        //usuario logado tem autorização?
+        if(!$estabelecimento->userAuthorize()) return redirect()->back();
+
+        if ( Vendor::apagarArquivo(config('constantes.DESTINO_IMAGE_ESTABELECIMENTO'), $estabelecimento->image ) ){
+            $estabelecimento->image = null;
+            if (!$estabelecimento->save()){
+                return redirect()->route('admin.estab.editar', $estabelecimento->id)->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
+            }
+            return redirect()->route('admin.estab.editar', $estabelecimento->id)->with('messageReturn', ['status' => true, 'messages' => ['Deletada com sucesso.',]]);
+        }
+        return redirect()->route('admin.estab.editar', $estabelecimento->id)->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
     }
 }

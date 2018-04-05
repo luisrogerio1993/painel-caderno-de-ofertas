@@ -15,8 +15,7 @@ class CreateClicksAnunciosTable extends Migration
     {
         Schema::create('clicks_anuncios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id');
             $table->string('nome_usuario');
             $table->string('nome_tipo_anuncio');
             $table->string('nome_anuncio');

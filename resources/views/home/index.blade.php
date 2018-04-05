@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ $title }}</title>
-
+        <!--Favicon-->
+        <link rel="icon" type="image/png" href="{{ asset('/assets/imgs/favicon.png') }}">
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('vendor/adminlte/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/adminlte/vendor/font-awesome/css/font-awesome.min.css') }}">
@@ -44,10 +45,10 @@
                         </li>
                         @else
                         <li>
-                            <a href="{{ route('login') }}">Entrar</a>
+                            <a href="{{ route('login') }}"><span class="glyphicon glyphicon-share-alt"></span> Entrar</a>
                         </li>                                  
                         <li>                                  
-                            <a href="{{ route('register') }}">Registrar-me</a>
+                            <a href="{{ route('register') }}"><span class="glyphicon glyphicon-menu-hamburger"></span> Registrar-me</a>
                         </li>                                  
                         @endauth
                     </ul>
@@ -56,12 +57,15 @@
             </div>     
         </nav>
         <!--/nav bar-->
+        <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
         @include('includes.message-return')
         <!--conteudo-->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-8 col-xs-12 text-center">
-                    <img src="{{ url('/assets/imgs/home-app.png') }}" alt="Imagem Home" width="500px">            
+                <div class="col-md-8 col-xs-12">
+                    <center>
+                        <img src="{{ url('/assets/imgs/home-app.png') }}" class="img-responsive" alt="Imagem Home" width="500px">            
+                    </center>
                 </div>
                 <div class="col-md-4 col-xs-12">
                     <h3 class="text-center">Plataforma</h3>
@@ -72,7 +76,7 @@
                     <h3>Sem mais, confira:</h3>
                     <br/>
                     <div class="row text-center">
-                        <button type="button" class="btn btn-google btn-lg">Google Play Story</button>
+                        <a class="btn btn-default btn-lg" href="#">Google Play Store</a>
                     </div>             
                 </div>
             </div>

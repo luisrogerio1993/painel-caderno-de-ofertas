@@ -22,7 +22,7 @@
 @section('content')
 <a href="{{ route('admin.estab.cadastro') }}" class="btn btn-success btn-acima-form"><span class="glyphicon glyphicon-plus"></span> Cadastrar</a>
 @if( count($estabelecimentos) > 0 )
-<table class="table table-striped text-center">
+<table class="table table-striped tables-listagens-principais">
     <thead>
         <tr>
             <th scope="col"></th>

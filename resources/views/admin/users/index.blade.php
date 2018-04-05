@@ -21,7 +21,7 @@
 
 @section('content')
 @if(!empty($users))
-<table class="table  table-striped text-center">
+<table class="table table-striped tables-listagens-principais">
     <thead>
         <tr>
             <th scope="col"></th>

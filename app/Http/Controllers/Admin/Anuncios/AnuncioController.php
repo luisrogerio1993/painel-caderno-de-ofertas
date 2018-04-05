@@ -11,6 +11,7 @@ use App\Models\Categorias_estabelecimentos;
 use App\Models\Tipos_anuncio;
 use App\Models\Estabelecimentos;
 use App\Models\Clicks_anuncios;
+use App\Models\Configuracoes;
 use Auth;
 
 class AnuncioController extends Controller
@@ -56,9 +57,16 @@ class AnuncioController extends Controller
         $title = 'Cadastrar Anuncio';
         $categoriasEstabelecimentos = $this->categoriasEstabelecimento->pluck('nome', 'id')->all();
         $meusEstabelecimentos = $this->estabelecimento->where('user_id', '=', Auth::user()->id)->get()->pluck('nome', 'id');
-        $tiposAnuncio = Tipos_anuncio::pluck('nome', 'id')->all();
-
-        return view('admin.anuncios.cadastrar-editar', compact('title', 'categoriasEstabelecimentos', 'tiposAnuncio', 'meusEstabelecimentos'));
+        $tiposAnuncioSelect = Tipos_anuncio::pluck('nome', 'id')->all();
+        $configuracoes = Configuracoes::first();
+        //Descricao tipos de anuncios
+        $tiposAnuncioDescricao = [
+            'padrao' => Tipos_anuncio::where('nome', 'LIKE', "%Padrão%")->first(),
+            'premium' => Tipos_anuncio::where('nome', 'LIKE', "%Premium%")->first(),
+            'proximidade' => Tipos_anuncio::where('nome', 'LIKE', "%Proximidade%")->first(),
+        ];
+        
+        return view('admin.anuncios.cadastrar-editar', compact('title', 'categoriasEstabelecimentos', 'tiposAnuncioSelect', 'tiposAnuncioDescricao', 'meusEstabelecimentos', 'configuracoes'));
     }
 
     /**
@@ -234,5 +242,29 @@ class AnuncioController extends Controller
             
             return view('admin.anuncios.index', compact('anuncios', 'title', 'tiposAnuncio'));
         }
+    }
+    
+    public function destroyImage(Request $request) {
+        
+        //recuperar dados do formulario
+        $data = $request->all();
+        
+        //Recuperar dados do estabelecimento
+        $anuncio = $this->anuncio->find($data['id']);
+        
+        //redirecionar se o item não existir
+        if (!$anuncio) return redirect()->back();
+        
+        //usuario logado tem autorização?
+        if(!$anuncio->userAuthorize()) return redirect()->back();
+
+        if ( Vendor::apagarArquivo(config('constantes.DESTINO_IMAGE_ANUNCIO'), $anuncio->image ) ){
+            $anuncio->image = null;
+            if (!$anuncio->save()){
+                return redirect()->route('admin.anuncio.editar', $anuncio->id)->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
+            }
+            return redirect()->route('admin.anuncio.editar', $anuncio->id)->with('messageReturn', ['status' => true, 'messages' => ['Deletada com sucesso.',]]);
+        }
+        return redirect()->route('admin.anuncio.editar', $anuncio->id)->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
     }
 }

@@ -1,17 +1,14 @@
 <?php
 
 /*
- * arrumar cartao de credito css
- * remover imagens cadastradas <<<<
- * editar -> home
- * 
- * criar pagina contato
+ * FAZER TESTE EM TODAS OS FORMULARIOS
  */
 
 Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin', 'prefix' => 'admin'], function(){
     Route::get('/', 'AdminController@index')->middleware('userCadastroCompleto')->name('admin.home');
     Route::get('/ajuda', 'AdminController@ajuda')->name('admin.ajuda');
     Route::get('/reenviar-confirmacao-email/{id}', 'AdminController@sendConfirmationEmail')->name('admin.reenviar.confirmacao.email');
+    Route::get('/contato', 'AdminController@contato')->name('admin.contato');
     
     /*
      * ANUNCIOS
@@ -24,6 +21,7 @@ Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin'
         Route::put('/{id}/editar', 'AnuncioController@update')->name('admin.anuncio.editar');
         Route::delete('/{id}/deletar', 'AnuncioController@destroy')->name('admin.anuncio.deletar');
         Route::post('/search', 'AnuncioController@search')->name('admin.anuncio.search');
+        Route::post('/', 'AnuncioController@destroyImage')->name('admin.anuncio.image.destroy');
         
         /*
         * CLICKS ANUNCIO
@@ -46,6 +44,7 @@ Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin'
             Route::put('/{id}/editar', 'EstabelecimentoController@update')->name('admin.estab.editar');
             Route::delete('/{id}/deletar', 'EstabelecimentoController@destroy')->name('admin.estab.deletar');
             Route::post('/search', 'EstabelecimentoController@search')->name('admin.estab.search');
+            Route::post('/', 'EstabelecimentoController@destroyImage')->name('admin.estab.image.destroy');
         });
     });
     /*
@@ -76,6 +75,7 @@ Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin'
         Route::put('/{id}/editar', 'UserController@update')->name('admin.user.editar');
         Route::delete('/{id}/deletar', 'UserController@destroy')->name('admin.user.deletar');
         Route::post('/search', 'UserController@search')->name('admin.user.search');
+        Route::post('/', 'UserController@destroyImage')->name('admin.user.image.destroy');
     });
     
     /*
@@ -103,14 +103,17 @@ Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin'
      * PAGAMENTOS-PAGSEGURO
      */
     Route::post('/pagseguro-getcode', 'Pagamentos\PagseguroController@getCode')->name('admin.pagseguro.transparent.code');
-    Route::post('/pagseguro-billet', 'Pagamentos\PagseguroController@billet')->name('admin.pagseguro.transparent.billet');
+    Route::post('/pagseguro-billet', 'Pagamentos\PagseguroController@billetTransaction')->name('admin.pagseguro.transparent.billet');
     Route::post('/pagseguro-card', 'Pagamentos\PagseguroController@cardTransaction')->name('admin.pagseguro.transparent.cardTransaction');
-
-    
-//    Route::get('/pagseguro', 'Pagamentos\PagseguroController@pagseguro')->name('admin.pagseguro');
-//    Route::get('/pagseguro-transparent', 'Pagamentos\PagseguroController@transparent')->name('admin.pagseguro.transparent');
-    Route::get('/pagseguro-card', 'Pagamentos\PagseguroController@card')->name('admin.pagseguro.transparent.card');
 }); 
+
+    /*
+     * VERIFICAR VALIDADE DE ANUNCIOS E USUARIOS
+     */
+    
+    Route::group([], function(){
+        Route::get('/admin/rotina-diaria', 'Admin\AdminController@rotinaDiaria');
+    });
 
     /*
      * HOME (Fora do Painel)
@@ -121,10 +124,6 @@ Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin'
      * ROTAS DE AUTENTIFICAÇÃO (login | register | rec password)
      */
      Auth::routes();
-//    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('site.senha.redefinir.get');
-//    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('site.senha.redefinir.get');
-//    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('site.senha.redefinir.set');
-//    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('site.enviar.email.redefinir.senha');
 
     
     Route::get('/register/verify/{email_token}', 'Admin\AdminController@verificarEmail')->name('admin.verificar.email');
@@ -139,12 +138,8 @@ Route::group(['middleware' => ['auth', 'throttle:30,2',], 'namespace' => 'Admin'
     /*
      * PARA TESTES
      */
-    Route::get('/t', 'Site\SiteController@teste');
-    Route::get('/t2', function(){
-        return view('emails.verificar-email');
-    });
+    Route::get('/t', 'Home\HomeController@teste');
     
     Route::any('{catchall}', function() {
-//        return abort(404);
         return redirect()->route('site.home')->with('messageReturn', ['status' => false, 'messages' => ['Página não encontrada.',]]);
     })->where('catchall', '.*');

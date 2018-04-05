@@ -129,8 +129,8 @@ class Pagseguro extends Model
     public function getConfigs() {
         return [
             'email' => config('pagseguro.email'),
-            'token' => config('pagseguro.token'), 
-            'notificationURL' => config('pagseguro.url_notification_test_post'),
+            'token' => config('pagseguro.token'),
+            'notificationURL' => config('pagseguro.url_notification_cdo'),
         ];
     }
     

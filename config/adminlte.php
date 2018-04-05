@@ -187,6 +187,12 @@ return [
             'icon' => 'ion ion-help',
             'icon_color' => 'green',
         ],
+        [
+            'text'       => 'Contato',
+            'url'  => 'admin/contato',
+            'icon' => 'ion ion-email',
+            'icon_color' => 'green',
+        ],
     ],
 
     /*

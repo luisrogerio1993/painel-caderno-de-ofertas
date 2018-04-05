@@ -114,6 +114,8 @@ class LoginController extends Controller
                 'uf' => null,
                 'cep' => null,
                 'conta_vinculada' => "{$contaVinculada}",
+                'account_social_id' => $userSocial->id,
+                'email_verificado' => true,
             ]);
             Auth::login($userCadastrado);
             

@@ -10,7 +10,7 @@
 
 @section('content')
 @if(!empty($clicks))
-<table class="table  table-striped text-center">
+<table class="table table-striped tables-listagens-principais">
     <thead>
         <tr>
             <th scope="col">Nome Usuário</th>

@@ -10,6 +10,17 @@
 
 @section('content')
 @if (isset($anuncio))
+
+    <!--Deletar imagem-->
+        @if($anuncio->image != null)
+            {!! Form::open(["route" => "admin.anuncio.image.destroy", "id" => "form-delete-image" ]) !!}
+            {!! Form::hidden("id", "$anuncio->id") !!}
+            {!! Form::close() !!}
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-image" title="Deletar imagem"><span class='glyphicon glyphicon-trash'></span></button>
+            {!! App\Http\Controllers\Vendor::addModalView("Ação Irreversível!", "Deletar imagem?", "danger", "modal-delete-image", "Cancelar", "form-delete-image") !!}
+        @endif
+    <!--/Deletar imagem-->
+
     {!! Form::model($anuncio, ["route" => ["admin.anuncio.editar", $anuncio->id], "class" => "form-normal", "method" => "put", "files" => true]) !!}
     <div class="div-img" >
         <img id="div-img" class="img-rounded" src="{{ $anuncio->image != null ? url(config('constantes.DESTINO_IMAGE_ANUNCIO').'\\'.$anuncio->image) : url(config('constantes.DEFAULT_IMAGE_ANUNCIO')) }}" width="79" alt="Imagem Anuncio"/>
@@ -94,12 +105,37 @@
         @endif
     </div>
     <div class="form-group has-feedback col-xs-12 {{ $errors->has('tipo_anuncio') ? 'has-error' : '' }}" style="padding: 0px">
-        {!! Form::select("tipo_anuncio", $tiposAnuncio, null, ["class" => "form-control", "placeholder" => trans('auth.tipo_anuncio') ]) !!}
+        {!! Form::select("tipo_anuncio", $tiposAnuncioSelect, null, ["class" => "form-control", "placeholder" => trans('auth.tipo_anuncio') ]) !!}
         @if ($errors->has('tipo_anuncio'))
         <span class="help-block">
             <strong>{{ $errors->first('tipo_anuncio') }}</strong>
         </span>
         @endif
+        <!-- valor anuncios -->
+        <script>
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+        <div class="alert alert-info">
+            <table class="table-value-anuncios">
+                <tbody>
+                    <tr>
+                        <td><strong>{{ $tiposAnuncioDescricao['padrao']->nome }}</strong> <span class="badge" data-toggle="tooltip" title="{{ $tiposAnuncioDescricao['padrao']->descricao }}">?</span></td>
+                        <td>R$ {{ number_format($configuracoes->valor_anuncio_padrao, 2, ',', '.') }} /clique</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{ $tiposAnuncioDescricao['premium']->nome }}</strong> <span class="badge" data-toggle="tooltip" title="{{ $tiposAnuncioDescricao['premium']->descricao }}">?</span></td>
+                        <td>R$ {{ number_format($configuracoes->valor_anuncio_premium, 2, ',', '.') }} /clique</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{ $tiposAnuncioDescricao['proximidade']->nome }}</strong> <span class="badge" data-toggle="tooltip" title="{{ $tiposAnuncioDescricao['proximidade']->descricao }}">?</span></td>
+                        <td>R$ {{ number_format($configuracoes->valor_anuncio_proximidade_fisica, 2, ',', '.') }} /clique</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--/ valor anuncios -->
     </div>
 <div class="form-group col-xs-12" style="padding-left: 0px">
     @if (isset($anuncio))

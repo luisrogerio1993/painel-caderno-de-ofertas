@@ -19,8 +19,19 @@
                 text-align: center;
                 color: #ffffff;
                 background-color: #dd4b39;
-                margin: 0px;
-                padding: 1px 0px;
+                border-radius: 20px 0px 20px 0px;
+                border: #b33829 solid 3px;
+            }
+            
+            .div-vermelha:hover, .div-vermelha:focus
+            {
+                background-color: #cc4230;
+            }
+            
+            .div-vermelha > h1
+            {
+                font-size: 2.5em;
+                margin: 10px;
             }
 
             .div-ajuda-link
@@ -57,12 +68,16 @@
                 width:auto;
                 text-decoration:none;
                 text-align:center;
-                text-shadow:1px 1px 0px #ffffff;
-                padding-left: 10px;
-                padding-right: 10px;
+                text-shadow:2px 2px 0px #ffffff;
+                padding-left: 20px;
+                padding-right: 20px;
             }.botao-email:active {
                 position:relative;
                 top:1px;
+            }
+            
+            .botao-email:hover, .botao-email:focus{
+                background-color: #f2f2f2;
             }
         </style>
         <div class="container-fluid">

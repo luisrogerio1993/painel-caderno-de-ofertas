@@ -11,10 +11,20 @@
 @section('content')
 
 @if (isset($estabelecimento))
+
+    <!--Deletar imagem-->
+        @if($estabelecimento->image != null)
+            {!! Form::open(["route" => "admin.estab.image.destroy", "id" => "form-delete-image" ]) !!}
+            {!! Form::hidden("id", "$estabelecimento->id") !!}
+            {!! Form::close() !!}
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-image" title="Deletar imagem"><span class='glyphicon glyphicon-trash'></span></button>
+            {!! App\Http\Controllers\Vendor::addModalView("Ação Irreversível!", "Deletar imagem?", "danger", "modal-delete-image", "Cancelar", "form-delete-image") !!}
+        @endif
+    <!--/Deletar imagem-->
+    
     {!! Form::model($estabelecimento, ["route" => ["admin.estab.editar", $estabelecimento->id], "class" => "form-normal", "method" => "put", "files" => true ]) !!}
     <div class="div-img" >
         <img id="div-img" class="img-rounded" src="{{ $estabelecimento->image != null ? url(config('constantes.DESTINO_IMAGE_ESTABELECIMENTO').'\\'.$estabelecimento->image) : url(config('constantes.DEFAULT_IMAGE_ESTABELECIMENTO')) }}" width="79" alt="Imagem Estabelecimento"/>
-    
 @else
     {!! Form::open(["route" => "admin.estab.cadastro", "class" => "form-normal", "files" => true ]) !!}
     <div class="div-img" >

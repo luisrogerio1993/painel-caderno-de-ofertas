@@ -7,17 +7,24 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use App\User;
 
 class AuthApiController extends Controller {
 
     public function authenticate(Request $request) {
-        if (!$request->has('email') || !$request->has('password')) {
+        if ( (!$request->has('email') || !$request->has('password')) && ((!$request->has('email') || !$request->has('account_social_id'))) ) {
             return response()->json(['error' => 'inputs_missing'], 401);
         }
-
+        
         // grab credentials from the request
-        $credentials = $request->only('email', 'password');
-
+        if($request->has('password')){ //login normak
+            $credentials = $request->only('email', 'password');
+        }else{ //login social
+            if( !$credentials = User::where('email', $request->get('email'))->where('account_social_id', $request->get('account_social_id'))->first() ){
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        }
+        
         try {
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {

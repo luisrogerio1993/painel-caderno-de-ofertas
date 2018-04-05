@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->foreign('uf')->references('id')->on('lista_ufs');
             $table->string('cep')->nullable();
             $table->enum('conta_vinculada', [0, 1, 2])->default(0)->comment('0 = NAO / 1 = FACEBOOK / 2 = GOOGLE');
+            $table->string('account_social_id')->unique()->nullable();
             $table->double('credito_disponivel', 10, 2)->default(0);
             $table->boolean('is_admin')->default(0);
             $table->string('email_token')->unique()->nullable();

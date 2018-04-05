@@ -10,22 +10,12 @@ use App\Models\Produtos_loja;
 
 class PagseguroController extends Controller
 {
-    public function pagseguro(Pagseguro $pagseguro) {
-        $code = $pagseguro->generate();
-        $urlRedirect = config('pagseguro.url_redirect_after_request').$code;
-        
-        return redirect()->away($urlRedirect);
-    }
-    
-    public function transparent() {
-        return view('admin.pagamentos.pagseguro.index');
-    }
     
     public function getCode(Pagseguro $pagseguro) {
         return $pagseguro->getSessionId();
     }
     
-    public function billet(Request $request, Pagseguro $pagseguro, Compras $compra) {
+    public function billetTransaction(Request $request, Pagseguro $pagseguro, Compras $compra) {
         //verificar se foi criada a stancia de COMPRA -> Session
         if(!session()->has('compra')){
             redirect()->route('admin.financeiro')->with('messageReturn', ['status' => false, 'messages' => ['Falha ao realizar compra.',]]);
@@ -42,7 +32,7 @@ class PagseguroController extends Controller
         //limpar compra porque foi feita com sucesso
         session()->forget('compra');
         
-        return response()->json($response, 200);
+        return response()->json($response, 200); //$response
     }
     
     
@@ -65,8 +55,4 @@ class PagseguroController extends Controller
         
         return response()->json($response, 200);
     }
-                                public function card() {
-                                    return view('admin.pagamentos.pagseguro.card');
-                                }
-    
 }

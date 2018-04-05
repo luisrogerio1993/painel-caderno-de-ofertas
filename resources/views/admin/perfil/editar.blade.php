@@ -18,19 +18,32 @@
 @stop
 
 @section('content')
-<!--Deletar imagem-->
-    {!! Form::open(["route" => "admin.perfil.image.destroy", "id" => "formDelete-imagePerfil" ]) !!}
-    {!! Form::hidden("image", "$perfil->image") !!}
-    {!! Form::submit("Atualizar", ["class" => "btn btn-success", "name" => "enviar"]) !!}
-    {!! Form::close() !!}
-    <button type="button" class="btn btn-danger botaoRemoverImagem" data-toggle="modal" data-target="#modal-delete-imagePerfil"><span class='glyphicon glyphicon-trash'></span></button>
-    {!! App\Http\Controllers\Vendor::addModalView("Ação Irreversível!", "Deletar imagem do perfil?", "danger", "modal-delete-imagePerfil", "Cancelar", "formDelete-imagePerfil") !!}
-    <!--/Deletar imagem-->
 @if(isset($perfil))
+
+    <!--Deletar imagem-->
+    @if($perfil->image != null)
+        {!! Form::open(["route" => "admin.perfil.image.destroy", "id" => "form-delete-image" ]) !!}
+        {!! Form::close() !!}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-image" title="Deletar imagem"><span class='glyphicon glyphicon-trash'></span></button>
+        {!! App\Http\Controllers\Vendor::addModalView("Ação Irreversível!", "Deletar imagem?", "danger", "modal-delete-image", "Cancelar", "form-delete-image") !!}
+    @endif
+    <!--/Deletar imagem-->
+
     {!! Form::model($perfil, ["route" => "admin.perfil.editar", "class" => "form-normal", "method" => "put", "files" => true]) !!}
     <div class="div-img" >
         <img id="div-img" class="img-rounded" src="{{ $perfil->image != null ? url(config('constantes.DESTINO_IMAGE_USUARIO').'\\'.$perfil->image) : url(config('constantes.DEFAULT_IMAGE_USUARIO')) }}" width="79" alt="Imagem Perfil"/>
 @else
+
+    <!--Deletar imagem-->
+    @if($user->image != null)
+        {!! Form::open(["route" => "admin.user.image.destroy", "id" => "form-delete-image" ]) !!}
+        {!! Form::hidden("id", "$user->id") !!}
+        {!! Form::close() !!}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-image" title="Deletar imagem"><span class='glyphicon glyphicon-trash'></span></button>
+        {!! App\Http\Controllers\Vendor::addModalView("Ação Irreversível!", "Deletar imagem?", "danger", "modal-delete-image", "Cancelar", "form-delete-image") !!}
+    @endif
+    <!--/Deletar imagem-->
+
     {!! Form::model($user, ["route" => ["admin.user.editar", $user->id], "class" => "form-normal", "method" => "put", "files" => true]) !!}
     <div class="div-img" >
         <img id="div-img" class="img-rounded" src="{{ $user->image != null ? url(config('constantes.DESTINO_IMAGE_USUARIO').'\\'.$user->image) : url(config('constantes.DEFAULT_IMAGE_USUARIO')) }}" width="79" alt="Imagem Perfil"/>
@@ -65,7 +78,11 @@
     </div>
     @if(isset($perfil))
         <div class="form-group has-feedback col-xs-12 {{ $errors->has('password') ? 'has-error' : '' }}" style="padding: 0px">
-            {!! Form::password("password", [ "class" => "form-control", "placeholder" => trans('auth.password'), "title" => trans('auth.password'), "required" ]) !!}
+            @if( auth()->user()->conta_vinculada != 0 )
+                <input class="form-control" placeholder="{{ trans('auth.password') }}" title="{{ trans('auth.password') }}" required name="password" type="password" value="{{ str_random(20) }}">
+            @else
+                {!! Form::password("password", [ "class" => "form-control", "placeholder" => trans('auth.password'), "title" => trans('auth.password'), "required" ]) !!}
+            @endif
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             @if ($errors->has('password'))
             <span class="help-block">

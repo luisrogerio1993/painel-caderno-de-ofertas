@@ -74,7 +74,8 @@ return [
     'cardNumber'                    => 'Número do cartão',
     'cardExpiryMonth'               => 'Mês expiração (ex. 05)',
     'cardExpiryYear'                => 'Ano expiração (ex. 2025)',
-    'cardCVC'                       => 'CVC (3  números)',
+    'cardCVC'                       => 'CVC (ex. 123)',
+    'cardHolder'  => 'Nome (escrito do cartão)',
     //comentarios
     'nome_anuncio'                       => 'Anúncio',
     'nome_usuario'                       => 'Usuário',

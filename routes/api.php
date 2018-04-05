@@ -46,6 +46,7 @@ Route::group(['namespace' => 'Api'], function(){
         
         //cliques anuncios
         Route::post('click-anuncio', 'ApiClicksAnuncioController@store');
+        Route::get('click-ip/{ip}', 'ApiClicksAnuncioController@checkClickIp');
     });
     
     /*

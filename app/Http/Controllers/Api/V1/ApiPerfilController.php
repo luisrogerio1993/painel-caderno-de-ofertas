@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Models\Clicks_anuncios;
 use JWTAuth;
 use Carbon\Carbon;
+use App\Http\Controllers\Vendor;
 
 class ApiPerfilController extends Controller
 {
@@ -28,9 +28,13 @@ class ApiPerfilController extends Controller
     {
         $retorno = [];
         //recuperar dados do perfil
+        
         $user = JWTAuth::parseToken()->authenticate();
         //recuperar informações da conta (se for anunciante)
         array_push($retorno, ['user' => $user]);
+        
+        //modificar imagem -> link
+        $user = Vendor::adicionarImagemLink($user, config('constantes.DESTINO_IMAGE_USUARIO'));
         
         if($user->isAnunciante()){
             //(quant. estabelecimentos / anuncios / cliques nos anuncios)

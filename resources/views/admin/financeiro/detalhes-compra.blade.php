@@ -14,7 +14,7 @@
         <tr>
             <th scope="col">Nome do item</th>
             <th scope="col">Quantidade</th>
-            <th scope="col">Valor</th>
+            <th scope="col">Valor unitário</th>
         </tr>
     </thead>
     <tbody>

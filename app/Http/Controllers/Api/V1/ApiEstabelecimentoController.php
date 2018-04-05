@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Estabelecimentos;
 use App\Http\Controllers\Api\V1\ApiVendorController;
+use App\Http\Controllers\Vendor;
 
 class ApiEstabelecimentoController extends Controller
 {
@@ -25,6 +26,9 @@ class ApiEstabelecimentoController extends Controller
         }
         //Quantidade de anuncios cadastrados
         $quantAnuncios = $estabelecimento->getTotalAnuncios();
+        
+        //modificar imagem -> link
+        $estabelecimento = Vendor::adicionarImagemLink($estabelecimento, config('constantes.DESTINO_IMAGE_ESTABELECIMENTO'));
         
         array_push ($retorno, ['estabelecimento' => $estabelecimento]);
         array_push ($retorno, ['quantAnuncios' => $quantAnuncios]);

@@ -54,6 +54,12 @@ class UserController extends Controller {
         //redirecionar se o item não existir
         if (!$perfil) return redirect()->back();
         
+        //configurar UF e Cidade pelo CEP
+        $resultCEP = Vendor::buscarCEP($dataForm['cep']);
+        if(!is_array($resultCEP)){ //error
+            return redirect()->back()->withInput()->withErrors(['cep' => ['CEP inválido']]);
+        }
+
         //salvar imagem perfil se houver
         if(isset($dataForm['image'])){
             //Apagar imagem perfil antiga se houver (update only)
@@ -67,6 +73,8 @@ class UserController extends Controller {
                 $dataForm['image'] = $imagemSalva['return'];
             }
         }
+        $dataForm['cidade'] = $resultCEP['localidade'];
+        $dataForm['uf'] = $resultCEP['ufID'];
         
         $update = $perfil->update($dataForm);
         
@@ -122,5 +130,20 @@ class UserController extends Controller {
 
             return view('admin.users.index', compact('users', 'title'));
         }
+    }
+    
+    public function destroyImage(Request $request) {
+        //get usuario a editar
+        if(! $perfil = $this->perfil->find($request->only('id')['id']) ){
+            return redirect()->back();
+        }
+        if ( Vendor::apagarArquivo(config('constantes.DESTINO_IMAGE_USUARIO'), $perfil->image) ){
+            $perfil->image = null;
+            if (!$perfil->save()){
+                return redirect()->route('admin.user.editar', $request->only('id')['id'])->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
+            }
+            return redirect()->route('admin.user.editar', $request->only('id')['id'])->with('messageReturn', ['status' => true, 'messages' => ['Deletada com sucesso.',]]);
+        }
+        return redirect()->route('admin.user.editar', $request->only('id')['id'])->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
     }
 }

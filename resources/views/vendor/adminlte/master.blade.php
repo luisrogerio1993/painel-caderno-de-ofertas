@@ -22,7 +22,7 @@
     <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/adminlte/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!--Favicon-->
-    <link rel="icon" type="image/png" href="{{ url('/data/images/default_estabelecimentos/estabelecimento.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('/assets/imgs/favicon.png') }}">
     
     @if(config('adminlte.plugins.select2'))
         <!-- Select2 -->

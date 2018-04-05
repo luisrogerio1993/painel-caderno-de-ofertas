@@ -124,20 +124,13 @@ input[type="radio"], input[type="checkbox"]{
     font-size: 20px;
 }
 
-.div-card-fora
+/*.div-card-fora
 {
     padding: 15px;
     border-radius: 14px;
     background: linear-gradient(#ffeded, #b42c1b, #dd4b39);
-    border: 4px solid #dd4b39;
-}
-
-.form-cartao-brand
-{
-    font-weight: bold;
-    color: #ffffff;
-    text-shadow: 1px 1px 1px #000;
-}
+    border: 2px solid #dd4b39;
+}*/
 
 .info-box-icon-override{
     text-align:center;
@@ -177,4 +170,30 @@ input[type="radio"], input[type="checkbox"]{
     position: absolute;
     z-index: 1;
     left: 0%;
+}
+
+.table-value-anuncios > tbody > tr > td{
+    padding-right: 15px;
+}
+
+.table-value-anuncios > tbody > tr > td > .badge{
+    cursor: pointer;
+}
+
+.msg-navegador {
+    padding-top: 50px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: #999999;
+    font-style: italic;
+}
+
+.tables-listagens-principais > tbody > tr > td,
+.tables-listagens-principais > tbody > tr > th,
+.tables-listagens-principais > thead > tr > th
+{
+    display: table-cell;
+    vertical-align:middle;
+    position: static;
+    text-align: center;
 }

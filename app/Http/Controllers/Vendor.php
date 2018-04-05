@@ -10,7 +10,6 @@ use App\Models\Estabelecimentos;
 use App\Models\Anuncios;
 use App\Models\Lista_ufs;
 use Cep;
-use Session;
 
 class Vendor extends Controller {
     /*
@@ -163,6 +162,32 @@ class Vendor extends Controller {
         }else{
             return false;
         }
+    }
+    
+    public static function avisoNavegadorCompativel() {
+        $listaNavegadores = ['MSIE', 'Firefox', 'Chrome', 'Safari'];
+        $navegadorAtual = $_SERVER['HTTP_USER_AGENT'];
+        foreach($listaNavegadores as $navegador){
+            if(strrpos($navegadorAtual, $navegador)){
+                $navegadorAtual = $navegador;
+            }
+        }
+        if(strrpos($navegadorAtual, 'Firefox') != 0){
+            return 'Seu navegador atual é o '. $navegadorAtual .', para total compactibilidade com a plataforma recomendamos o Mozilla Firefox.';
+        }
+    }
+    
+    public static function adicionarImagemLink($objeto, $constanteDestino) {
+        if(!is_array($objeto)){
+            if ($objeto->image != null){
+                $objeto->image = env('APP_URL').'/'.$constanteDestino.'/'.$objeto->image;
+            }
+        }else{
+            if ($objeto['image'] != null){
+                $objeto['image'] = env('APP_URL').'/'.$constanteDestino.'/'.$objeto['image'];
+            }
+        }
+        return $objeto;
     }
 }
 

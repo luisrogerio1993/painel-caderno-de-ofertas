@@ -9,6 +9,7 @@ use App\Models\Anuncios;
 use App\Models\Estabelecimentos;
 use App\Models\Comentarios_anuncios;
 use App\Http\Controllers\Api\V1\ApiVendorController;
+use App\Http\Controllers\Vendor;
 
 class ApiAnunciosController extends Controller
 {
@@ -35,9 +36,9 @@ class ApiAnunciosController extends Controller
     public function index()
     {
         $retorno = [];
-        //6 anuncios premium, depois 6 anuncios padrão
+        //6 anuncios premium, depois 9 anuncios padrão
         $limiteAnunciosPremiumPorPagina = 6;
-        $limiteAnunciosPadraoPorPagina = 6;
+        $limiteAnunciosPadraoPorPagina = 9;
         //pegar todos os registros disponiveis premium
         $anunciosPremium = $this->anuncio
                 ->whereDate('anuncio_valido_ate', '>=', Carbon::now()->toDateString())
@@ -54,8 +55,19 @@ class ApiAnunciosController extends Controller
                 ->take($limiteAnunciosPadraoPorPagina)
                 ->get()
                 ->toArray();
+        
+        //modificar imagem -> link
+        foreach ($anunciosPremium as $key => $anuncioPremium) {
+            $anunciosPremium[$key] = Vendor::adicionarImagemLink($anuncioPremium, config('constantes.DESTINO_IMAGE_ANUNCIO'));
+        }
+        
+        foreach ($anunciosPadrao as $key => $anuncioPadrao) {
+            $anunciosPadrao[$key] = Vendor::adicionarImagemLink($anuncioPadrao, config('constantes.DESTINO_IMAGE_ANUNCIO'));
+        }
+        
         //rand 6 anuncios premium
         array_push($retorno, ['anunciosPremium' => $anunciosPremium]);
+        
         //rand 6 anuncios padrao
         array_push($retorno, ['anunciosPadrao' => $anunciosPadrao]);
         
@@ -76,8 +88,15 @@ class ApiAnunciosController extends Controller
         if( !$anuncio = $this->anuncio->find($id) ){
             return response()->json(['error' => 'not_found'], 404);
         }
+        //modificar imagem -> link
+        $anuncio = Vendor::adicionarImagemLink($anuncio, config('constantes.DESTINO_IMAGE_ANUNCIO'));
+        
         //recuperar dados do estabelecimento desse anuncio
         $estabelecimento = $this->estabelecimento->find($anuncio->estabelecimento_id);
+        
+        //modificar imagem -> link
+        $estabelecimento = Vendor::adicionarImagemLink($estabelecimento, config('constantes.DESTINO_IMAGE_ESTABELECIMENTO'));
+        
         //recuperar comentarios desse anuncio
         $comentarios = $this->comentariosAnuncio->where('id_anuncio', $anuncio->id)->get();
         

@@ -66,6 +66,7 @@
                             <!--Notificações-->
                             @php($configuracoes = App\Models\Configuracoes::find(1))
                             @php($user = Auth::user())
+                            @php($creditoMinimoAviso = 10)
                             <li class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-bell-o"></i>
@@ -95,6 +96,9 @@
                                                 <li class="header">Nenhuma Notificação</li>
                                             </ul>
                                         @endif
+                                    <!--*-->{{-- For Anunciantes e estiver com creditos abaixo do limite --}}
+                                    @elseif( $user->isAnunciante() && $user->credito_disponivel < $creditoMinimoAviso)
+                                        @include('includes.notificacoes')
                                     @else
                                         <span class="label label-success"></span>
                                         </a>
@@ -115,9 +119,9 @@
 
                                         <p>
                                             {{ strtoupper($user->name) }} - 
-                                            @if($user->is_admin)
+                                            @if($user->can('isAdmin'))
                                                 ADMINISTRADOR
-                                            @elseif ($user->getTotalEstabelecimentos() > 0)
+                                            @elseif ($user->can('userTemAnuncios'))
                                                 ANUNCIANTE
                                             @else
                                                 USUÁRIO
@@ -127,20 +131,28 @@
                                     </li>
                                     <!-- Menu Body -->
                                     <li class="user-body">
-                                        <div class="row" >
-                                            <div class="col-xs-3 text-center">
-                                                <a href="{{ route('admin.perfil.editar') }}" title="Meu perfil">Perfil</a>
-                                            </div>
-                                            <div class="col-xs-6 text-center">
-                                                <a href="{{ route('admin.financeiro') }}" title="Meus créditos">Créditos - 
-                                                    <span class="pull-right-container">
-                                                        <span class="label label-success">R$ {{ number_format($user->credito_disponivel, 2, ',', '.') }}</span>
-                                                    </span>
-                                                </a>
-                                            </div>
-                                            <div class="col-xs-3 text-center">
-                                                <a href="{{ route('admin.perfil.info') }}" title="Informações da conta">Info</a>
-                                            </div>
+                                        <div class="row">
+                                            <!-- Não mostrar se ele não for anunciante -->
+                                            @if( $user->can('userTemAnuncios') )
+                                                <div class="col-xs-3 text-center">
+                                                    <a href="{{ route('admin.perfil.editar') }}" title="Meu perfil">Perfil</a>
+                                                </div>
+                                                <div class="col-xs-6 text-center">
+                                                    <a href="{{ route('admin.financeiro') }}" title="Meus créditos">Créditos - 
+                                                        <span class="pull-right-container">
+                                                            <span class="label label-success">R$ {{ number_format($user->credito_disponivel, 2, ',', '.') }}</span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="col-xs-3 text-center">
+                                                    <a href="{{ route('admin.perfil.info') }}" title="Informações da conta">Info</a>
+                                                </div>
+                                            @else
+                                                <div class="col-xs-12 text-center">
+                                                    <a href="{{ route('admin.perfil.editar') }}" title="Meu perfil">Perfil</a>
+                                                </div>
+                                            @endif
+                                            <!--/ Não mostrar se ele não for anunciante -->
                                         </div>
                                         <!-- /.row -->
                                     </li>
@@ -173,11 +185,17 @@
 
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu" data-widget="tree">
                 @each('adminlte::partials.menu-item', $adminlte->menu(), 'item')
             </ul>
+            <!-- Mensagem melhor navegador compativel-->
+            
+            <div class="msg-navegador">
+                {{ App\Http\Controllers\Vendor::avisoNavegadorCompativel() }}
+            </div>
+            <!--/ Mensagem melhor navegador compativel-->
+            
             <!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->

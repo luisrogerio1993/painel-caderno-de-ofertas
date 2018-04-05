@@ -98,6 +98,12 @@ class PerfilController extends Controller
         //Formatar dados para o DB
         $dataForm['password'] = bcrypt($dataForm['password']);
         
+        //configurar UF e Cidade pelo CEP
+        $resultCEP = Vendor::buscarCEP($dataForm['cep']);
+        if(!is_array($resultCEP)){ //error
+            return redirect()->back()->withInput()->withErrors(['cep' => ['CEP inválido']]);
+        }
+        
         //salvar imagem perfil se houver
         if(isset($dataForm['image'])){
             //Apagar imagem perfil antiga se houver (update only)
@@ -112,11 +118,6 @@ class PerfilController extends Controller
             }
         }
         
-        //configurar UF e Cidade pelo CEP
-        $resultCEP = Vendor::buscarCEP($dataForm['cep']);
-        if(!is_array($resultCEP)){ //error
-            return redirect()->back()->withInput()->withErrors(['cep' => ['CEP inválido']]);
-        }
         $dataForm['cidade'] = $resultCEP['localidade'];
         $dataForm['uf'] = $resultCEP['ufID'];
         
@@ -177,8 +178,13 @@ class PerfilController extends Controller
     }
     
     public function destroyImage(Request $request) {
-        
-        if ( Vendor::apagarArquivo(config('constantes.DESTINO_IMAGE_USUARIO'), $request->only('image')) ){
+        if ( Vendor::apagarArquivo(config('constantes.DESTINO_IMAGE_USUARIO'), Auth::user()->image) ){
+            //Recuperar dados do perfil ativo no momento
+            $perfil = $this->perfil->find(Auth::user()->id);
+            $perfil->image = null;
+            if (!$perfil->save()){
+                return redirect()->route('admin.perfil.editar')->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
+            }
             return redirect()->route('admin.perfil.editar')->with('messageReturn', ['status' => true, 'messages' => ['Deletada com sucesso.',]]);
         }
         return redirect()->route('admin.perfil.editar')->with('messageReturn', ['status' => false, 'messages' => ['Falha ao deletar.',]]);
